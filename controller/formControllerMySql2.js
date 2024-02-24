@@ -12,17 +12,18 @@ const createFormMySql = async (req, res) => {
     }
 
     const connect = await pool.getConnection();
+    let saveData;
 
-    const [saveData] = await connect.execute(
-      `INSERT INTO fdata (name,email,phone,service,message) VALUES ('${fullName}','${emailId}',${phoneNumber},'${service}','${message}')`
-    );
-
-    connect.release();
-
-    if (!saveData) {
-      return res.status(400).json({
+    try {
+      [saveData] = await connect.execute(
+        `INSERT INTO fdata (name,email,phone,service,message) VALUES ('${fullName}','${emailId}',${phoneNumber},'${service}','${message}')`
+      );
+      connect.release();
+    } catch (err) {
+      console.log(err);
+      return res.status(200).json({
         status: 0,
-        msg: "Could not save the data!!!",
+        msg: "DataBase Error!!!",
       });
     }
 
