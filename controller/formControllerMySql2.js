@@ -11,7 +11,16 @@ const createFormMySql = async (req, res) => {
       });
     }
 
-    const connect = await pool.getConnection();
+    let connect;
+    try {
+      connect = await pool.getConnection();
+    } catch (err) {
+      console.log(err);
+      res.status(200).json({
+        status: 0,
+        msg: "Connection Error!!!",
+      });
+    }
     let saveData;
 
     try {
